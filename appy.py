@@ -239,10 +239,19 @@ def admin():
                 #update in excel sheet
                 wb = openpyxl.load_workbook("interview_questions_mcq.xlsx")
                 ws = wb.active
+                # Before the loop, find the index of the row you want to delete
+                row_to_delete = None
+                current_row_index = 2  # Assuming row 1 is headers and data starts from row 2
                 for row in ws.iter_rows(min_row=2, values_only=True):
                     if row[0] == question:
-                        ws.delete_rows(row[0].row)
+                        row_to_delete = current_row_index
                         break
+                    current_row_index += 1
+
+                # If a row to delete is found, delete it
+                if row_to_delete is not None:
+                    ws.delete_rows(row_to_delete)
+
                 ws.append([question, "\n".join([choice1, choice2, choice3, choice4]), answer, "easy"])
                 wb.save("interview_questions_mcq.xlsx")
 
