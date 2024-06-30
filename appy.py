@@ -41,10 +41,12 @@ def query_db(query, args=(), one=False):
     conn.close()
     return (rv[0] if rv else None) if one else rv
 
+
 # Fetch total number of questions
 def get_total_questions():
     result = query_db("SELECT COUNT(*) as total FROM qa", one=True)
     return result["total"]
+
 
 def select_random_question():
     total_questions = get_total_questions()
@@ -57,6 +59,7 @@ def select_random_question():
     ran = random.choice(available_questions)
     return ran
 
+
 def check_answer(question, answer):
     if answer is None:
         return False
@@ -68,6 +71,7 @@ def check_answer(question, answer):
 
     data = query_db("SELECT answer FROM qa WHERE qno=%s;", (question,), one=True)
     return data and data["answer"] == answer_int
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -85,6 +89,7 @@ def home():
         score = 0
         return render_template("index.html", error_message=error_message)
 
+
 @app.route("/user_login", methods=["POST", "GET"])
 def user_login():
     global username, allowed_urls
@@ -95,6 +100,7 @@ def user_login():
         return redirect(url_for("quiz"))
     return render_template("index.html")
 
+
 @app.route("/admin_authenticate", methods=["POST"])
 def admin_authenticate():
     allowed_urls.append("/admin_authenticate")
@@ -103,6 +109,7 @@ def admin_authenticate():
         return "Access Denied", 403
     allowed_urls.append("/admin")
     return redirect(url_for("admin"))
+
 
 @app.route("/quiz", methods=["GET", "POST"])
 def quiz():
@@ -155,19 +162,24 @@ def quiz():
                             question,
                         ),
                         one=True,
-                    )["choice%s" % (int(
+                    )[
+                        "choice%s"
+                        % (
+                            int(
                                 query_db(
                                     "SELECT answer FROM qa WHERE qno=%s;",
                                     (question,),
                                     one=True,
                                 )["answer"]
                             )
-                            + 1)],
+                            + 1
+                        )
+                    ],
                 }
             )
         total_questions = get_total_questions()
 
-        if len(questions) >= total_questions or count-1 >= 10:
+        if len(questions) >= total_questions or count - 1 >= 10:
             allowed_urls.append("/result")
             return redirect(url_for("result"))
         ran = select_random_question()
@@ -180,6 +192,7 @@ def quiz():
             total_questions=total_questions,
             username=username,
         )
+
 
 @app.route("/result", methods=["GET", "POST"])
 def result():
@@ -195,6 +208,7 @@ def result():
             questions=questions,
             username=username,
         )
+
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
@@ -213,7 +227,6 @@ def admin():
             choice3 = request.form.get("choice3")
             choice4 = request.form.get("choice4")
 
-
             if action == "add":
                 query_db(
                     "INSERT INTO qa (qno, question, answer, choice1, choice2, choice3, choice4) VALUES (%s, %s, %s, %s, %s, %s, %s);",
@@ -221,7 +234,14 @@ def admin():
                 )
                 wb = openpyxl.load_workbook("interview_questions_mcq.xlsx")
                 ws = wb.active
-                ws.append([question, "\n".join([choice1, choice2, choice3, choice4]), answer, "easy"])
+                ws.append(
+                    [
+                        question,
+                        "\n".join([choice1, choice2, choice3, choice4]),
+                        answer,
+                        "easy",
+                    ]
+                )
                 wb.save("interview_questions_mcq.xlsx")
                 return "Question Added Successfully"
             elif action == "remove":
@@ -232,12 +252,14 @@ def admin():
                     "UPDATE qa SET question=%s, answer=%s, choice1=%s, choice2=%s, choice3=%s, choice4=%s WHERE qno=%s;",
                     (question, answer, choice1, choice2, choice3, choice4, qno),
                 )
-                #update in excel sheet
+                # update in excel sheet
                 wb = openpyxl.load_workbook("interview_questions_mcq.xlsx")
                 ws = wb.active
                 # Before the loop, find the index of the row you want to delete
                 row_to_delete = None
-                current_row_index = 2  # Assuming row 1 is headers and data starts from row 2
+                current_row_index = (
+                    2  # Assuming row 1 is headers and data starts from row 2
+                )
                 for row in ws.iter_rows(min_row=2, values_only=True):
                     if row[0] == question:
                         row_to_delete = current_row_index
@@ -248,7 +270,14 @@ def admin():
                 if row_to_delete is not None:
                     ws.delete_rows(row_to_delete)
 
-                ws.append([question, "\n".join([choice1, choice2, choice3, choice4]), answer, "easy"])
+                ws.append(
+                    [
+                        question,
+                        "\n".join([choice1, choice2, choice3, choice4]),
+                        answer,
+                        "easy",
+                    ]
+                )
                 wb.save("interview_questions_mcq.xlsx")
 
                 return "Question Modified Successfully"
@@ -257,6 +286,7 @@ def admin():
 
         return render_template("admin.html")
 
+
 @app.route("/admin/question/<qno>", methods=["GET"])
 def get_question(qno):
     question = query_db("SELECT * FROM qa WHERE qno=%s;", (qno,), one=True)
@@ -264,11 +294,14 @@ def get_question(qno):
         return question
     return {}, 404
 
+
 if __name__ == "__main__":
     mydb = get_db_connection()
     cursor = mydb.cursor()
     cursor.execute("DROP TABLE IF EXISTS qa")
-    cursor.execute("CREATE TABLE qa (qno INT PRIMARY KEY AUTO_INCREMENT, question VARCHAR(255), answer INT, difficulty varchar(255), choice1 VARCHAR(255), choice2 VARCHAR(255), choice3 VARCHAR(255), choice4 VARCHAR(255))")
+    cursor.execute(
+        "CREATE TABLE qa (qno INT PRIMARY KEY AUTO_INCREMENT, question VARCHAR(255), answer INT, difficulty varchar(255), choice1 VARCHAR(255), choice2 VARCHAR(255), choice3 VARCHAR(255), choice4 VARCHAR(255))"
+    )
     insert_query = "INSERT INTO qa (question, answer, difficulty, choice1, choice2, choice3, choice4) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     for question, details in interview_questions_mcq_dict.items():
         data_tuple = (
