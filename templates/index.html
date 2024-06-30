@@ -14,6 +14,11 @@
 </head>
 
 <body class="bg-gray-100 flex flex-col items-center justify-center h-screen">
+    {% if error_message %}
+    <script>
+        alert("{{error_message}}");
+    </script>
+    {% endif %}
     <div class="mb-8" id="login-forms">
         <!-- Choose Login Form -->
         <form id="choose-login-form" class="bg-white p-8 rounded-lg shadow-md">
@@ -44,7 +49,7 @@
         </form>
 
         <!-- User Login Form -->
-        <form id="user-login-form" action="/quiz" method="post" class="bg-white p-8 rounded-lg shadow-md hidden">
+        <form id="user-login-form" action="/user_login" method="post" class="bg-white p-8 rounded-lg shadow-md hidden">
             <h2 class="text-center text-2xl mb-4">User Login</h2>
             <div class="mb-4">
                 <input type="text" name="username" placeholder="Username" class="px-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500">

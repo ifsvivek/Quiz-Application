@@ -5,20 +5,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/dist/css/output.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
 
+        .container {
+            max-width: 800px;
+        }
+
+        h1,
+        h2 {
+            color: #374151;
+        }
+
+        .question-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+        }
+
+        .answer,
+        .correct-answer {
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .correct-answer {
+            font-weight: bold;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100">
     <div class="container mx-auto mt-10 p-5 bg-white rounded-lg shadow">
-        <h1 class="text-2xl font-bold text-center mb-4">Quiz Results</h1>
+        <h1 class="text-3xl font-bold text-center mb-6">Quiz Results</h1>
         <p class="text-lg"><strong>Username:</strong> {{ username }}</p>
-        <p class="text-lg mb-4"><strong>Score:</strong> {{ score }}</p>
-        <h2 class="text-xl font-semibold mb-2">Question Review</h2>
+        <p class="text-lg mb-6"><strong>Score:</strong> {{ score }}</p>
+        <h2 class="text-xl font-semibold mb-4">Question Review</h2>
         <ul>
-            {% for question in questions %}
-            <li class="{{ 'text-green-500' if question.correct else 'text-red-500' }} mb-2">
-                Q: {{ question.data.question }} - Your Answer: {{ question.data['choice' + question.user_answer] }} ({{ 'Correct' if question.correct else 'Incorrect' }})
+            {% for i in questions %}
+            <li class="{{ 'text-green-500' if i.correct else 'text-red-500' }} question-item">
+                <strong>Q: {{ i.question.values() | list | first }}</strong>
+                <span class="answer">Your Answer: {{ i.answer.values() | list | first }}</span>
+                {% if not i.correct %}
+                <span class="correct-answer text-green-500">Correct Answer: {{ i.correct_choice.values() | list | first }}</span>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
