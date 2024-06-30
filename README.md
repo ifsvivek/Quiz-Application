@@ -21,6 +21,8 @@ This project is a web-based quiz application built with Flask and TailwindCSS. I
     -   `result.html`: Displays quiz results to users.
 -   `tailwind.config.js`: TailwindCSS configuration.
 -   `package.json`: Node.js project file with dependencies.
+-   `requirements.txt`: Python dependencies.
+-   `interview_questions_mcq.xlsx`: Excel file containing quiz questions.
 
 ## Setup
 
@@ -50,7 +52,6 @@ npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watc
 python -m venv env  # Create a virtual environment
 ```
 
-
 ```bash
 source env/Scripts/activate  # On Windows
 source env/bin/activate  # On Unix or MacOS
@@ -67,10 +68,6 @@ pip install -r requirements.txt
 ```bash
 python appy.py
 ```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request.
 
 ## License
 
