@@ -1,6 +1,7 @@
 from flask import *
 import mysql.connector
 import random
+import openpyxl
 
 app = Flask(__name__)
 
@@ -9,14 +10,29 @@ allowed_urls = ["/"]
 questions = []
 score = 0
 username = ""
-ADMIN_USERNAME = "ifsvivek"
+ADMIN_USERNAME = "admin"
 error_message = ""
 
+
+
+wb = openpyxl.load_workbook("interview_questions_mcq.xlsx")
+ws = wb.active
+
+interview_questions_mcq_dict = {}
+
+for row in ws.iter_rows(min_row=2, values_only=True):
+    question, options, answer_index, difficulty = row
+    options_list = options.split("\n")
+    interview_questions_mcq_dict[question] = {
+        "options": options_list,
+        "answer_index": int(answer_index),
+        "difficulty": difficulty,
+    }
 
 # Database connection setup
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost", user="root", password="1234", database="appy"
+        host="localhost", user="root", password="9249", database="example"
     )
 
 
@@ -230,5 +246,25 @@ def get_question(qno):
     return {}, 404
 
 
+
 if __name__ == "__main__":
+    mydb=get_db_connection()
+    cursor=mydb.cursor()
+    cursor.execute("DROP TABLE IF EXISTS qa")
+    cursor.execute("CREATE TABLE IF NOT EXISTS qa (qno INT PRIMARY KEY, question VARCHAR(255), answer INT, difficulty varchar(255), choice1 VARCHAR(255), choice2 VARCHAR(255), choice3 VARCHAR(255), choice4 VARCHAR(255))")
+    insert_query="INSERT INTO qa (question, answer, difficulty, choice1, choice2, choice3, choice4) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    for question, details in interview_questions_mcq_dict.items():
+        # Preparing data tuple for insertion
+        data_tuple = (
+            question,
+            details["answer_index"],
+            details["difficulty"],
+            details["options"][0],
+            details["options"][1],
+            details["options"][2],
+            details["options"][3],
+        )
+        cursor.execute(insert_query, data_tuple)
+    mydb.commit()
     app.run(debug=True)
+
