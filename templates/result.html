@@ -47,7 +47,7 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="container mx-auto mt-10 p-5 bg-white rounded-lg shadow">
+    <div class="container mx-auto m-10 p-5 bg-white rounded-lg shadow">
         <h1 class="text-3xl font-bold text-center mb-6">Quiz Results</h1>
         <p class="text-lg"><strong>Username:</strong> {{ username }}</p>
         <p class="text-lg mb-6"><strong>Score:</strong> {{ score }}</p>
@@ -55,10 +55,10 @@
         <ul>
             {% for i in questions %}
             <li class="{{ 'text-green-500' if i.correct else 'text-red-500' }} question-item">
-                <strong>Q: {{ i.question.values() | list | first }}</strong>
-                <span class="answer">Your Answer: {{ i.answer.values() | list | first }}</span>
+                <strong>Q: {{ i.question }}</strong>
+                <span class="answer">Your Answer: {{ i.answer }}</span>
                 {% if not i.correct %}
-                <span class="correct-answer text-green-500">Correct Answer: {{ i.correct_choice.values() | list | first }}</span>
+                <span class="correct-answer text-green-500">Correct Answer: {{ i.correct_choice }}</span>
                 {% endif %}
             </li>
             {% endfor %}

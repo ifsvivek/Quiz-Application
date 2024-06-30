@@ -4,25 +4,25 @@ This project is a web-based quiz application built with Flask and TailwindCSS. I
 
 ## Features
 
--   **User Authentication**: Separate login forms for users and admins.
--   **Quiz Management**: Admins can add quiz questions.
--   **Dynamic Quiz Taking**: Users can take quizzes and get immediate feedback.
+- **User Authentication**: Separate login forms for users and admins.
+- **Quiz Management**: Admins can add quiz questions.
+- **Dynamic Quiz Taking**: Users can take quizzes and get immediate feedback.
 
 ## Project Structure
 
--   `appy.py`: Flask application files.
--   `env/`: Virtual environment directory.
--   `static/`: Contains static files like CSS.
-    -   `src/input.css`: TailwindCSS entry point.
--   `templates/`: HTML templates for the application.
-    -   `admin.html`: Admin interface for managing quizzes.
-    -   `index.html`: Landing page with login forms.
-    -   `quiz.html`: Quiz taking interface for users.
-    -   `result.html`: Displays quiz results to users.
--   `tailwind.config.js`: TailwindCSS configuration.
--   `package.json`: Node.js project file with dependencies.
--   `requirements.txt`: Python dependencies.
--   `interview_questions_mcq.xlsx`: Excel file containing quiz questions.
+- `appy.py`: Flask application files.
+- `env/`: Virtual environment directory.
+- `static/`: Contains static files like CSS.
+  - `src/input.css`: TailwindCSS entry point.
+- `templates/`: HTML templates for the application.
+  - `admin.html`: Admin interface for managing quizzes.
+  - `index.html`: Landing page with login forms.
+  - `quiz.html`: Quiz taking interface for users.
+  - `result.html`: Displays quiz results to users.
+- `tailwind.config.js`: TailwindCSS configuration.
+- `package.json`: Node.js project file with dependencies.
+- `requirements.txt`: Python dependencies.
+- `interview_questions_mcq.xlsx`: Excel file containing quiz questions.
 
 ## Setup
 
