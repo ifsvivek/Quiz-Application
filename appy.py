@@ -1,7 +1,8 @@
 from flask import Flask, request, redirect, url_for, render_template
-import mysql.connector
+
 import random
 import openpyxl
+from connect import get_db_connection
 
 app = Flask(__name__)
 
@@ -28,11 +29,6 @@ for row in ws.iter_rows(min_row=2, values_only=True):
         "difficulty": difficulty,
     }
 
-# Database connection setup
-def get_db_connection():
-    return mysql.connector.connect(
-        host="localhost", user="root", password="9249", database="example"
-    )
 
 # Database query execution
 def query_db(query, args=(), one=False):

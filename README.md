@@ -20,6 +20,7 @@ This project is a web-based quiz application built with Flask and TailwindCSS. I
   - `quiz.html`: Quiz taking interface for users.
   - `result.html`: Displays quiz results to users.
 - `tailwind.config.js`: TailwindCSS configuration.
+- `connect.py`: Credentials to establish connection with Database.
 - `package.json`: Node.js project file with dependencies.
 - `requirements.txt`: Python dependencies.
 - `interview_questions_mcq.xlsx`: Excel file containing quiz questions.
@@ -63,7 +64,15 @@ source env/bin/activate  # On Unix or MacOS
 pip install -r requirements.txt
 ```
 
-6. **Run the Flask application**
+6. **Change the Database Credentials**
+```py
+host="localhost"
+user="<Your_Username>" # root is default user
+password="<Your_Password>"
+database="<Your_Database_Name>"
+```
+
+7. **Run the Flask application**
 
 ```bash
 python appy.py
