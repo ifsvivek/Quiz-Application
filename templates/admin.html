@@ -6,41 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/static/dist/css/output.css">
-    <script>
-        function handleActionChange() {
-            const action = document.getElementById('action').value;
-            const fields = ['question', 'answer', 'choice1', 'choice2', 'choice3', 'choice4'];
-            fields.forEach(field => {
-                document.getElementById(field).parentElement.style.display = (action === 'add' || action === 'modify') ? 'block' : 'none';
-            });
+    <icon rel="icon" href="/static/images/favicon.ico">
 
-            document.getElementById('qno').parentElement.style.display = 'block';
+        <script>
+            function handleActionChange() {
+                const action = document.getElementById('action').value;
+                const fields = ['question', 'answer', 'choice1', 'choice2', 'choice3', 'choice4'];
+                fields.forEach(field => {
+                    document.getElementById(field).parentElement.style.display = (action === 'add' || action === 'modify') ? 'block' : 'none';
+                });
 
-            if (action === 'modify') {
-                const qno = document.getElementById('qno').value;
-                if (qno) {
-                    fetchQuestion(qno);
+                document.getElementById('qno').parentElement.style.display = 'block';
+
+                if (action === 'modify') {
+                    const qno = document.getElementById('qno').value;
+                    if (qno) {
+                        fetchQuestion(qno);
+                    }
                 }
             }
-        }
 
-        function fetchQuestion(qno) {
-            fetch(`/admin/question/${qno}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data) {
-                        document.getElementById('question').value = data.question;
-                        document.getElementById('answer').value = data.answer;
-                        document.getElementById('choice1').value = data.choice1;
-                        document.getElementById('choice2').value = data.choice2;
-                        document.getElementById('choice3').value = data.choice3;
-                        document.getElementById('choice4').value = data.choice4;
-                    } else {
-                        alert('Question not found!');
-                    }
-                });
-        }
-    </script>
+            function fetchQuestion(qno) {
+                fetch(`/admin/question/${qno}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            document.getElementById('question').value = data.question;
+                            document.getElementById('answer').value = data.answer;
+                            document.getElementById('choice1').value = data.choice1;
+                            document.getElementById('choice2').value = data.choice2;
+                            document.getElementById('choice3').value = data.choice3;
+                            document.getElementById('choice4').value = data.choice4;
+                        } else {
+                            alert('Question not found!');
+                        }
+                    });
+            }
+        </script>
 </head>
 
 <body class="bg-gray-100" onload="handleActionChange()">
