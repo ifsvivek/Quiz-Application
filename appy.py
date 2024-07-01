@@ -12,7 +12,7 @@ allowed_urls = ["/"]
 questions = []
 score = 0
 username = ""
-ADMIN_USERNAME = "admin"
+ADMIN_USERNAME = "ifsvivek"
 error_message = ""
 
 wb = openpyxl.load_workbook("interview_questions_mcq.xlsx")
