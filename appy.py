@@ -1,8 +1,17 @@
-from flask import Flask, request, redirect, url_for, render_template
+from flask import *
+import random, openpyxl, mysql.connector, dotenv, os
 
-import random
-import openpyxl
-from connect import get_db_connection
+dotenv.load_dotenv()
+
+
+def get_db_connection():
+    return mysql.connector.connect(
+        host=os.getenv("HOST"),
+        user=os.getenv("USER"),
+        password=os.getenv("PASSWORD"),
+        database=os.getenv("DATABASE"),
+    )
+
 
 app = Flask(__name__)
 
@@ -71,6 +80,7 @@ def check_answer(question, answer):
 
     data = query_db("SELECT answer FROM qa WHERE qno=%s;", (question,), one=True)
     return data and data["answer"] == answer_int
+
 
 
 @app.route("/", methods=["GET", "POST"])
