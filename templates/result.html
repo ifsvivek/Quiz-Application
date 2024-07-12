@@ -5,64 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Results</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/dist/css/output.css">
     <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
-
-
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-
-        .container {
-            max-width: 800px;
-        }
-
-        h1,
-        h2 {
-            color: #374151;
-        }
-
-        .question-item {
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .question-item:last-child {
-            border-bottom: none;
-        }
-
-        .answer,
-        .correct-answer {
-            display: block;
-            margin-top: 0.5rem;
-        }
-
-        .correct-answer {
-            font-weight: bold;
-        }
-    </style>
 </head>
 
-<body class="bg-gray-100">
-    <div class="container mx-auto m-10 p-5 bg-white rounded-lg shadow">
-        <h1 class="text-3xl font-bold text-center mb-6">Quiz Results</h1>
-        <p class="text-lg"><strong>Username:</strong> {{ username }}</p>
-        <p class="text-lg mb-6"><strong>Score:</strong> {{ score }}</p>
-        <h2 class="text-xl font-semibold mb-4">Question Review</h2>
-        <ul>
-            {% for i in questions %}
-            <li class="{{ 'text-green-500' if i.correct else 'text-red-500' }} question-item">
-                <strong>Q: {{ i.question }}</strong>
-                <span class="answer">Your Answer: {{ i.answer }}</span>
-                {% if not i.correct %}
-                <span class="correct-answer text-green-500">Correct Answer: {{ i.correct_choice }}</span>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+<body class="bg-gray-50">
+    <div class="container mx-auto my-12 p-6 bg-white rounded-lg shadow-lg">
+        <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">Quiz Results</h1>
+        <div class="mb-8">
+            <p class="text-xl font-semibold"><strong>Username:</strong> <span class="font-normal">{{ username }}</span></p>
+            <p class="text-xl font-semibold"><strong>Score:</strong> <span class="font-normal">{{ score }}</span></p>
+            <p class="text-xl font-semibold"><strong>Best:</strong> <span class="font-normal">{{ best }}</span></p>
+        </div>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Question Review</h2>
+            <ul class="list-disc pl-5 space-y-4">
+                {% for i in questions %}
+                <li class="{{ 'text-green-600' if i.correct else 'text-red-600' }} font-medium">
+                    <strong>Q: {{ i.question }}</strong>
+                    <div class="ml-4">
+                        <p>Your Answer: <span class="font-normal {{ 'text-green-600' if i.correct else 'text-red-600' }}">{{ i.answer }}</span></p>
+                        {% if not i.correct %}
+                        <p class="text-green-600">Correct Answer: <span class="font-normal">{{ i.correct_choice }}</span></p>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </body>
 

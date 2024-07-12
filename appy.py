@@ -22,6 +22,7 @@ questions = []
 score = 0
 username = ""
 ADMIN_USERNAME = "ifsvivek"
+ADMIN_PASSWORD = "1212"
 error_message = ""
 
 wb = openpyxl.load_workbook("interview_questions_mcq.xlsx")
@@ -82,7 +83,6 @@ def check_answer(question, answer):
     return data and data["answer"] == answer_int
 
 
-
 @app.route("/", methods=["GET", "POST"])
 def home():
     global questions, score, error_message
@@ -106,8 +106,19 @@ def user_login():
     allowed_urls.append("/user_login")
     if request.method == "POST":
         username = request.form.get("username")
-        allowed_urls.append("/quiz")
-        return redirect(url_for("quiz"))
+        password = request.form.get("password")
+        if query_db(
+            "SELECT * FROM users WHERE username=%s AND password=%s;",
+            (username, password),
+            one=True,
+        ):
+            allowed_urls.append("/quiz")
+            return redirect(url_for("quiz"))
+        else:
+            query_db(
+                "INSERT INTO users (username, password) VALUES (%s, %s);",
+                (username, password),
+            )
     return render_template("index.html")
 
 
@@ -115,10 +126,12 @@ def user_login():
 def admin_authenticate():
     allowed_urls.append("/admin_authenticate")
     admin_username = request.form.get("admin_username")
-    if admin_username != ADMIN_USERNAME:
-        return "Access Denied", 403
-    allowed_urls.append("/admin")
-    return redirect(url_for("admin"))
+    admin_password = request.form.get("admin_password")
+    if admin_username == ADMIN_USERNAME and admin_password == ADMIN_PASSWORD:
+        allowed_urls.append("/admin")
+        return redirect(url_for("admin"))
+
+    return "Invalid Credentials"
 
 
 @app.route("/quiz", methods=["GET", "POST"])
@@ -212,11 +225,27 @@ def result():
         return redirect(url_for("home"))
     else:
         global score, questions, username
+        query_db(
+            "UPDATE users SET last_test_score=%s WHERE username=%s;", (score, username)
+        )
+        best = query_db(
+            "SELECT best_test_score FROM users WHERE username=%s;",
+            (username,),
+            one=True,
+        )
+        print(best)
+        if best["best_test_score"] < score:
+            query_db(
+                "UPDATE users SET best_test_score=%s WHERE username=%s;",
+                (score, username),
+            )
+            best = score
         return render_template(
             "result.html",
             score=score,
             questions=questions,
             username=username,
+            best=best["best_test_score"],
         )
 
 
@@ -309,8 +338,12 @@ if __name__ == "__main__":
     mydb = get_db_connection()
     cursor = mydb.cursor()
     cursor.execute("DROP TABLE IF EXISTS qa")
+    
     cursor.execute(
         "CREATE TABLE qa (qno INT PRIMARY KEY AUTO_INCREMENT, question VARCHAR(255), answer INT, difficulty varchar(255), choice1 VARCHAR(255), choice2 VARCHAR(255), choice3 VARCHAR(255), choice4 VARCHAR(255))"
+    )
+    cursor.execute(
+        "CREATE TABLE if not exists users (username VARCHAR(255) PRIMARY KEY,password VARCHAR(255) NOT NULL,last_test_score INT DEFAULT 0,best_test_score INT DEFAULT 0);"
     )
     insert_query = "INSERT INTO qa (question, answer, difficulty, choice1, choice2, choice3, choice4) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     for question, details in interview_questions_mcq_dict.items():
