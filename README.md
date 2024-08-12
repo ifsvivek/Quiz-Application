@@ -54,7 +54,7 @@ python -m venv env  # Create a virtual environment
 ```
 
 ```bash
-source env/Scripts/activate  # On Windows
+env\Scripts\activate  # On Windows
 source env/bin/activate  # On Unix or MacOS
 ```
 
